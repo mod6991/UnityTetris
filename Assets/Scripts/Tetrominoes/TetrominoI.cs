@@ -227,7 +227,25 @@ namespace Assets.Scripts.Tetrominoes
                 { 0, 0, 0, 0 }
             };
 
-            //TODO: loop on gameboard
+            for (int i = Y, a = 0; i < (Y + GridSize); i++, a++)
+            {
+                for (int j = X, b = 0; j < (X + GridSize); j++, b++)
+                {
+                    if (i < 0 || i > 19 || j < 0 || j > 9)
+                        collisionGrid[a, b] = 1;
+                    else if (gameBoard.Board[i, j] != null)
+                        collisionGrid[a, b] = 1;
+                }
+            }
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                for (int j = 0; j < GridSize; j++)
+                {
+                    if (Grid[i, j] == 1 && collisionGrid[i, j] == 1)
+                        return true;
+                }
+            }
 
             return false;
         }
