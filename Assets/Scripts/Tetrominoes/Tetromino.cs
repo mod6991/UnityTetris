@@ -8,7 +8,7 @@ namespace Assets.Scripts.Tetrominoes
     /// </summary>
     public abstract class Tetromino
     {
-        protected TetrominoRotation _rotation;
+        private TetrominoRotation _rotation;
 
         public Tetromino(float panelWidth, float panelHeight,
                          float tileWidth, float tileHeight)
@@ -50,7 +50,16 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Tetromino rotation
         /// </summary>
-        public abstract TetrominoRotation Rotation { get; set; }
+        public TetrominoRotation Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                _rotation = value;
+                UpdateGrid(value);
+            }
+        }
+
         /// <summary>
         /// GameObject array
         /// </summary>
@@ -75,6 +84,8 @@ namespace Assets.Scripts.Tetrominoes
         /// </summary>
         /// <param name="gameBoard"></param>
         public abstract void RotateRight(TetrisGameBoard gameBoard);
+
+        public abstract void UpdateGrid(TetrominoRotation rotation);
 
         /// <summary>
         /// Update game objects (tiles) positions based on the tetromino coordinates and its rotation

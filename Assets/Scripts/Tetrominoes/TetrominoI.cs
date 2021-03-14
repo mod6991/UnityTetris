@@ -21,62 +21,11 @@ namespace Assets.Scripts.Tetrominoes
             Tiles[1] = del(Color);
             Tiles[2] = del(Color);
             Tiles[3] = del(Color);
-
-            //UpdateTilesPositions();
         }
 
         public override int GridSize
         {
             get { return 4; }
-        }
-
-        public override TetrominoRotation Rotation
-        {
-            get { return _rotation; }
-            set
-            {
-                _rotation = value;
-
-                switch (_rotation)
-                {
-                    case TetrominoRotation.Initial:
-                        Grid = new int[4, 4]
-                        {
-                            { 0, 0, 0, 0 },
-                            { 1, 1, 1, 1 },
-                            { 0, 0, 0, 0 },
-                            { 0, 0, 0, 0 }
-                        };
-                        break;
-                    case TetrominoRotation.Right:
-                        Grid = new int[4, 4]
-                        {
-                            { 0, 0, 1, 0 },
-                            { 0, 0, 1, 0 },
-                            { 0, 0, 1, 0 },
-                            { 0, 0, 1, 0 }
-                        };
-                        break;
-                    case TetrominoRotation.Twice:
-                        Grid = new int[4, 4]
-                        {
-                            { 0, 0, 0, 0 },
-                            { 0, 0, 0, 0 },
-                            { 1, 1, 1, 1 },
-                            { 0, 0, 0, 0 }
-                        };
-                        break;
-                    case TetrominoRotation.Left:
-                        Grid = new int[4, 4]
-                        {
-                            { 0, 1, 0, 0 },
-                            { 0, 1, 0, 0 },
-                            { 0, 1, 0, 0 },
-                            { 0, 1, 0, 0 }
-                        };
-                        break;
-                }
-            }
         }
 
         public override Color Color
@@ -156,7 +105,50 @@ namespace Assets.Scripts.Tetrominoes
                 }
             }
         }
-        
+
+        public override void UpdateGrid(TetrominoRotation rotation)
+        {
+            switch (rotation)
+            {
+                case TetrominoRotation.Initial:
+                    Grid = new int[4, 4]
+                    {
+                        { 0, 0, 0, 0 },
+                        { 1, 1, 1, 1 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 }
+                    };
+                    break;
+                case TetrominoRotation.Right:
+                    Grid = new int[4, 4]
+                    {
+                        { 0, 0, 1, 0 },
+                        { 0, 0, 1, 0 },
+                        { 0, 0, 1, 0 },
+                        { 0, 0, 1, 0 }
+                    };
+                    break;
+                case TetrominoRotation.Twice:
+                    Grid = new int[4, 4]
+                    {
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 1, 1, 1, 1 },
+                        { 0, 0, 0, 0 }
+                    };
+                    break;
+                case TetrominoRotation.Left:
+                    Grid = new int[4, 4]
+                    {
+                        { 0, 1, 0, 0 },
+                        { 0, 1, 0, 0 },
+                        { 0, 1, 0, 0 },
+                        { 0, 1, 0, 0 }
+                    };
+                    break;
+            }
+        }
+
         public override bool Collision(TetrisGameBoard gameBoard)
         {
             int[,] collisionGrid = new int[4, 4]
