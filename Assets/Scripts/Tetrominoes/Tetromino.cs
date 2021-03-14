@@ -36,11 +36,11 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Grid X coordinate
         /// </summary>
-        public float X { get; set; }
+        public int X { get; set; }
         /// <summary>
         /// Grid Y coordinate
         /// </summary>
-        public float Y { get; set; }
+        public int Y { get; set; }
         /// <summary>
         /// Grid size
         /// </summary>

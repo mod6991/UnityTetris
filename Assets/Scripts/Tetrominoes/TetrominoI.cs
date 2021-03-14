@@ -37,8 +37,8 @@ namespace Assets.Scripts.Tetrominoes
 
         public override void RotateLeft(TetrisGameBoard gameBoard)
         {
-            float x = X;
-            float y = Y;
+            int x = X;
+            int y = Y;
 
             TetrominoRotation previousR = Rotation;
             int[,] wkd = WKDLeftI[previousR];
@@ -219,6 +219,16 @@ namespace Assets.Scripts.Tetrominoes
         
         public override bool Collision(TetrisGameBoard gameBoard)
         {
+            int[,] collisionGrid = new int[4, 4]
+            {
+                { 0, 0, 0, 0 },
+                { 0, 0, 0, 0 },
+                { 0, 0, 0, 0 },
+                { 0, 0, 0, 0 }
+            };
+
+            //TODO: loop on gameboard
+
             return false;
         }
     }
