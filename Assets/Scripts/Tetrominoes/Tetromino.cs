@@ -24,6 +24,7 @@ namespace Assets.Scripts.Tetrominoes
         public float TileHeight { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
+        public abstract int GridSize { get; }
         public TetrominoRotation Rotation { get; set; }
         public GameObject[] Tiles { get; set; }
         public int[,] Grid { get; set; }
@@ -224,14 +225,6 @@ namespace Assets.Scripts.Tetrominoes
                 }
             }
         };
-    }
-
-    public enum TetrominoRotation
-    {
-        Initial = 0,
-        Right = 1,
-        Twice = 2,
-        Left = 3
     }
 
     public delegate GameObject NewTileDelegate(Color color);

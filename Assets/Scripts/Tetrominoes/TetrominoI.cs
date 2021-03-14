@@ -25,6 +25,11 @@ namespace Assets.Scripts.Tetrominoes
             UpdateTilesPositions();
         }
 
+        public override int GridSize
+        {
+            get { return 4; }
+        }
+
         public override Color Color
         {
             get { return _color; }
