@@ -22,7 +22,7 @@ namespace Assets.Scripts.Tetrominoes
             Tiles[2] = del(Color);
             Tiles[3] = del(Color);
 
-            UpdateTilesPositions();
+            //UpdateTilesPositions();
         }
 
         public override int GridSize
@@ -154,88 +154,6 @@ namespace Assets.Scripts.Tetrominoes
                     //Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
                     break;
                 }
-            }
-        }
-
-        public override void UpdateTilesPositions()
-        {
-            float x;
-            float y;
-
-            switch (Rotation)
-            {
-                case TetrominoRotation.Initial:
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 0) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[0].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[1].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[2].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 3) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[3].transform.localPosition = new Vector2(x, y);
-
-                    break;
-                case TetrominoRotation.Right:
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 0) * TileHeight;
-                    Tiles[0].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[1].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[2].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 3) * TileHeight;
-                    Tiles[3].transform.localPosition = new Vector2(x, y);
-
-                    break;
-                case TetrominoRotation.Twice:
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 0) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[0].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[1].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[2].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 3) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[3].transform.localPosition = new Vector2(x, y);
-
-                    break;
-                case TetrominoRotation.Left:
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 0) * TileHeight;
-                    Tiles[0].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
-                    Tiles[1].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
-                    Tiles[2].transform.localPosition = new Vector2(x, y);
-
-                    x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
-                    y = PanelHeight / 2 - TileHeight / 2 - (Y + 3) * TileHeight;
-                    Tiles[3].transform.localPosition = new Vector2(x, y);
-
-                    break;
             }
         }
         

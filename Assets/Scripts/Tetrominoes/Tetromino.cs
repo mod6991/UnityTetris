@@ -79,7 +79,27 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Update game objects (tiles) positions based on the tetromino coordinates and its rotation
         /// </summary>
-        public abstract void UpdateTilesPositions();
+        public void UpdateTilesPositions()
+        {
+            int tilesDone = 0;
+
+            for (int i = 0; i < GridSize; i++)
+            {
+                for (int j = 0; j < GridSize; j++)
+                {
+                    if (Grid[i, j] == 1)
+                    {
+                        float x = -PanelWidth / 2 + TileWidth / 2 + X * TileWidth + j * TileWidth;
+                        float y = PanelHeight / 2 - TileHeight / 2 - Y * TileHeight - i * TileHeight;
+
+                        Tiles[tilesDone++].transform.localPosition = new Vector2(x, y);
+
+                        if (tilesDone == 4)
+                            return;
+                    }
+                }
+            }
+        }
 
         public abstract bool Collision(TetrisGameBoard gameBoard);
 
