@@ -46,43 +46,53 @@ public class GameLogic : MonoBehaviour
     {
         _timer += Time.deltaTime;
 
+        int x = _tetromino.X;
+        int y = _tetromino.Y;
+        TetrominoRotation rotation = _tetromino.Rotation;
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            _tetromino.MoveLeft();
-            if (_tetromino.Collision(_gameBoard))
-                _tetromino.MoveRight();
+            _tetromino.X--;
+            //_tetromino.MoveLeft();
+            //if (_tetromino.Collision(_gameBoard))
+            //    _tetromino.MoveRight();
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            _tetromino.MoveRight();
-            if (_tetromino.Collision(_gameBoard))
-                _tetromino.MoveLeft();
+            _tetromino.X++;
+            //_tetromino.MoveRight();
+            //if (_tetromino.Collision(_gameBoard))
+            //    _tetromino.MoveLeft();
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
             _tetromino.RotateLeft(_gameBoard);
-            //if (_tetromino.Collision(_gameBoard))
-            //    _tetromino.RotateRight(_gameBoard);
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
             _tetromino.RotateRight(_gameBoard);
-            //if (_tetromino.Collision(_gameBoard))
-            //    _tetromino.RotateLeft(_gameBoard);
         }
 
         if(_timer * 1 > _dropTime || (_timer * 1 > _quickDropTime && Input.GetKey(KeyCode.DownArrow)))
         {
             _tetromino.Y++;
-            _tetromino.UpdateTilesPositions();
             _timer = 0;
 
-            if (_tetromino.Collision(_gameBoard))
-            {
-                _tetromino.Y--;
-                //TODO: If collision while dropping -> store position (with Y--) in game board and Spawn new tetromino
-            }
+            //if (_tetromino.Collision(_gameBoard))
+            //{
+            //    _tetromino.Y--;
+            //    //TODO: If collision while dropping -> store position (with Y--) in game board and Spawn new tetromino
+            //}
         }
+
+        if (_tetromino.Collision(_gameBoard))
+        {
+            _tetromino.X = x;
+            _tetromino.Y = y;
+            _tetromino.Rotation = rotation;
+        }
+
+        _tetromino.UpdateTilesPositions();
     }
 
     GameObject NewTile(Color color)

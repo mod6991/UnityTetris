@@ -30,6 +30,55 @@ namespace Assets.Scripts.Tetrominoes
             get { return 4; }
         }
 
+        public override TetrominoRotation Rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                _rotation = value;
+
+                switch (_rotation)
+                {
+                    case TetrominoRotation.Initial:
+                        Grid = new int[4, 4]
+                        {
+                            { 0, 0, 0, 0 },
+                            { 1, 1, 1, 1 },
+                            { 0, 0, 0, 0 },
+                            { 0, 0, 0, 0 }
+                        };
+                        break;
+                    case TetrominoRotation.Right:
+                        Grid = new int[4, 4]
+                        {
+                            { 0, 0, 1, 0 },
+                            { 0, 0, 1, 0 },
+                            { 0, 0, 1, 0 },
+                            { 0, 0, 1, 0 }
+                        };
+                        break;
+                    case TetrominoRotation.Twice:
+                        Grid = new int[4, 4]
+                        {
+                            { 0, 0, 0, 0 },
+                            { 0, 0, 0, 0 },
+                            { 1, 1, 1, 1 },
+                            { 0, 0, 0, 0 }
+                        };
+                        break;
+                    case TetrominoRotation.Left:
+                        Grid = new int[4, 4]
+                        {
+                            { 0, 1, 0, 0 },
+                            { 0, 1, 0, 0 },
+                            { 0, 1, 0, 0 },
+                            { 0, 1, 0, 0 }
+                        };
+                        break;
+                }
+            }
+        }
+
         public override Color Color
         {
             get { return _color; }
@@ -59,31 +108,26 @@ namespace Assets.Scripts.Tetrominoes
                     break;
             }
 
-            bool success = false;
-
             for (int i = 0; i < 5; i++)
             {
                 X = x + wkd[i, 0];
                 Y = y - wkd[i, 1];
                 if (!Collision(gameBoard))
                 {
-                    Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
-                    success = true;
+                    //Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
                     break;
                 }
             }
-
-            if (!success)
-            {
-                Debug.Log("rotate failed");
-                Rotation = previousR;
-            }
-            
-            UpdateTilesPositions();
         }
 
         public override void RotateRight(TetrisGameBoard gameBoard)
         {
+            int x = X;
+            int y = Y;
+
+            TetrominoRotation previousR = Rotation;
+            int[,] wkd = WKDRightI[previousR];
+
             switch (Rotation)
             {
                 case TetrominoRotation.Initial:
@@ -100,7 +144,17 @@ namespace Assets.Scripts.Tetrominoes
                     break;
             }
 
-            UpdateTilesPositions();
+            for (int i = 0; i < 5; i++)
+            {
+                X = x + wkd[i, 0];
+                Y = y - wkd[i, 1];
+
+                if (!Collision(gameBoard))
+                {
+                    //Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
+                    break;
+                }
+            }
         }
 
         public override void UpdateTilesPositions()
@@ -111,14 +165,6 @@ namespace Assets.Scripts.Tetrominoes
             switch (Rotation)
             {
                 case TetrominoRotation.Initial:
-                    Grid = new int[4, 4]
-                    {
-                        { 0, 0, 0, 0 },
-                        { 1, 1, 1, 1 },
-                        { 0, 0, 0, 0 },
-                        { 0, 0, 0, 0 }
-                    };
-
                     x = -PanelWidth / 2 + TileWidth / 2 + (X + 0) * TileWidth;
                     y = PanelHeight / 2 - TileHeight / 2 - (Y + 1) * TileHeight;
                     Tiles[0].transform.localPosition = new Vector2(x, y);
@@ -137,14 +183,6 @@ namespace Assets.Scripts.Tetrominoes
 
                     break;
                 case TetrominoRotation.Right:
-                    Grid = new int[4, 4]
-                    {
-                        { 0, 0, 1, 0 },
-                        { 0, 0, 1, 0 },
-                        { 0, 0, 1, 0 },
-                        { 0, 0, 1, 0 }
-                    };
-
                     x = -PanelWidth / 2 + TileWidth / 2 + (X + 2) * TileWidth;
                     y = PanelHeight / 2 - TileHeight / 2 - (Y + 0) * TileHeight;
                     Tiles[0].transform.localPosition = new Vector2(x, y);
@@ -163,14 +201,6 @@ namespace Assets.Scripts.Tetrominoes
 
                     break;
                 case TetrominoRotation.Twice:
-                    Grid = new int[4, 4]
-                    {
-                        { 0, 0, 0, 0 },
-                        { 0, 0, 0, 0 },
-                        { 1, 1, 1, 1 },
-                        { 0, 0, 0, 0 }
-                    };
-
                     x = -PanelWidth / 2 + TileWidth / 2 + (X + 0) * TileWidth;
                     y = PanelHeight / 2 - TileHeight / 2 - (Y + 2) * TileHeight;
                     Tiles[0].transform.localPosition = new Vector2(x, y);
@@ -189,14 +219,6 @@ namespace Assets.Scripts.Tetrominoes
 
                     break;
                 case TetrominoRotation.Left:
-                    Grid = new int[4, 4]
-                    {
-                        { 0, 1, 0, 0 },
-                        { 0, 1, 0, 0 },
-                        { 0, 1, 0, 0 },
-                        { 0, 1, 0, 0 }
-                    };
-
                     x = -PanelWidth / 2 + TileWidth / 2 + (X + 1) * TileWidth;
                     y = PanelHeight / 2 - TileHeight / 2 - (Y + 0) * TileHeight;
                     Tiles[0].transform.localPosition = new Vector2(x, y);
