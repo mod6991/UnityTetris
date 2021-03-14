@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Tetrominoes
 {
+    /// <summary>
+    /// Tetromino base abstract class
+    /// </summary>
     public abstract class Tetromino
     {
         public Tetromino(float panelWidth, float panelHeight,
@@ -18,229 +17,131 @@ namespace Assets.Scripts.Tetrominoes
             TileHeight = tileHeight;
         }
 
+        /// <summary>
+        /// Panel width for drawing positions
+        /// </summary>
         public float PanelWidth { get; set; }
+        /// <summary>
+        /// Panel height for drawing positions
+        /// </summary>
         public float PanelHeight { get; set; }
+        /// <summary>
+        /// Tile width for drawing positions
+        /// </summary>
         public float TileWidth { get; set; }
+        /// <summary>
+        /// Tile height for drawing positions
+        /// </summary>
         public float TileHeight { get; set; }
+        /// <summary>
+        /// Grid X coordinate
+        /// </summary>
         public float X { get; set; }
+        /// <summary>
+        /// Grid Y coordinate
+        /// </summary>
         public float Y { get; set; }
+        /// <summary>
+        /// Grid size
+        /// </summary>
         public abstract int GridSize { get; }
+        /// <summary>
+        /// Tetromino rotation
+        /// </summary>
         public TetrominoRotation Rotation { get; set; }
+        /// <summary>
+        /// GameObject array
+        /// </summary>
         public GameObject[] Tiles { get; set; }
+        /// <summary>
+        /// Grid array
+        /// </summary>
         public int[,] Grid { get; set; }
+        /// <summary>
+        /// Tetromino color
+        /// </summary>
         public abstract Color Color { get; }
+
+        /// <summary>
+        /// Rotate tetromino counter-clockwise
+        /// </summary>
+        /// <param name="gameBoard"></param>
         public abstract void RotateLeft(TetrisGameBoard gameBoard);
 
+        /// <summary>
+        /// Rotate tetromino clockwise
+        /// </summary>
+        /// <param name="gameBoard"></param>
         public abstract void RotateRight(TetrisGameBoard gameBoard);
 
+        /// <summary>
+        /// Move tetromino to the left
+        /// </summary>
         public void MoveLeft()
         {
             X -= 1;
             UpdateTilesPositions();
         }
 
+        /// <summary>
+        /// Move tetromino to the right
+        /// </summary>
         public void MoveRight()
         {
             X += 1;
             UpdateTilesPositions();
         }
 
+        /// <summary>
+        /// Update game objects (tiles) positions based on the tetromino coordinates and its rotation
+        /// </summary>
         public abstract void UpdateTilesPositions();
 
         public abstract bool CollisionX(TetrisGameBoard gameBoard);
         public abstract bool CollisionY(TetrisGameBoard gameBoard);
 
-        public Dictionary<TetrominoRotation, RotationWKCoords[]> WKDRightI = new Dictionary<TetrominoRotation, RotationWKCoords[]>()
+        /// <summary>
+        /// Wall kick data for I piece (clockwise)
+        /// </summary>
+        public Dictionary<TetrominoRotation, int[,]> WKDRightI = new Dictionary<TetrominoRotation, int[,]>()
         {
-            {
-                TetrominoRotation.Initial, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-2, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords(-2,-1),
-                    new RotationWKCoords( 1, 2)
-                }
-            },
-            {
-                TetrominoRotation.Right, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords( 2, 0),
-                    new RotationWKCoords(-1, 2),
-                    new RotationWKCoords( 2,-1)
-                }
-            },
-            {
-                TetrominoRotation.Twice, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 2, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords( 2, 1),
-                    new RotationWKCoords(-1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Left, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords(-2, 0),
-                    new RotationWKCoords( 1,-2),
-                    new RotationWKCoords(-2, 1)
-                }
-            }
+            { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-2, 0}, { 1, 0}, {-2,-1}, { 1, 2} } },
+            { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, {-1, 0}, { 2, 0}, {-1, 2}, { 2,-1} } },
+            { TetrominoRotation.Twice, new int[5, 2] { { 0, 0}, { 2, 0}, {-1, 0}, { 2, 1}, {-1,-2} } },
+            { TetrominoRotation.Left, new int[5, 2] { { 0, 0}, { 1, 0}, {-2, 0}, { 1,-2}, {-2, 1} } }
         };
 
-        public Dictionary<TetrominoRotation, RotationWKCoords[]> WKDLeftI = new Dictionary<TetrominoRotation, RotationWKCoords[]>()
+        /// <summary>
+        /// Wall kick data for I piece (counter-clockwise)
+        /// </summary>
+        public Dictionary<TetrominoRotation, int[,]> WKDLeftI = new Dictionary<TetrominoRotation, int[,]>()
         {
-            {
-                TetrominoRotation.Initial, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords( 2, 0),
-                    new RotationWKCoords(-1, 2),
-                    new RotationWKCoords( 2,-1)
-                }
-            },
-            {
-                TetrominoRotation.Right, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 2, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords( 2, 1),
-                    new RotationWKCoords(-1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Twice, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords(-2, 0),
-                    new RotationWKCoords( 1,-2),
-                    new RotationWKCoords(-2, 1)
-                }
-            },
-            {
-                TetrominoRotation.Left, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-2, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords(-2,-1),
-                    new RotationWKCoords( 1, 2)
-                }
-            }
+            { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-1, 0}, { 2, 0}, {-1, 2}, { 2,-1} } },
+            { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 2, 0}, {-1, 0}, { 2, 1}, {-1,-2} } },
+            { TetrominoRotation.Twice, new int[5, 2] { { 0, 0}, { 1, 0}, {-2, 0}, { 1,-2}, {-2, 1} } },
+            { TetrominoRotation.Left, new int[5, 2] { { 0, 0}, {-2, 0}, { 1, 0}, {-2,-1}, { 1, 2} } }
         };
 
-        public Dictionary<TetrominoRotation, RotationWKCoords[]> WKDRightJLSTZ = new Dictionary<TetrominoRotation, RotationWKCoords[]>()
+        /// <summary>
+        /// Wall kick data for JLSTZ pieces (clockwise)
+        /// </summary>
+        public Dictionary<TetrominoRotation, int[,]> WKDRightJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
         {
-            {
-                TetrominoRotation.Initial, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords(-1, 1),
-                    new RotationWKCoords( 0,-2),
-                    new RotationWKCoords(-1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Right, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords( 1,-1),
-                    new RotationWKCoords( 0, 2),
-                    new RotationWKCoords( 1, 2)
-                }
-            },
-            {
-                TetrominoRotation.Twice, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords( 1, 1),
-                    new RotationWKCoords( 0,-2),
-                    new RotationWKCoords( 1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Left, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords(-1,-1),
-                    new RotationWKCoords( 0, 2),
-                    new RotationWKCoords(-1, 2)
-                }
-            }
+            { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-1, 0}, {-1, 1}, { 0,-2}, {-1,-2} } },
+            { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 1, 0}, { 1,-1}, { 0, 2}, { 1, 2} } },
+            { TetrominoRotation.Twice, new int[5, 2] { { 0, 0}, { 1, 0}, { 1, 1}, { 0,-2}, { 1,-2} } },
+            { TetrominoRotation.Left, new int[5, 2] { { 0, 0}, {-1, 0}, {-1,-1}, { 0, 2}, {-1, 2} } }
         };
 
-        public Dictionary<TetrominoRotation, RotationWKCoords[]> WKDLeftJLSTZ = new Dictionary<TetrominoRotation, RotationWKCoords[]>()
+        /// <summary>
+        /// Wall kick data for JLSTZ pieces (counter-clockwise)
+        /// </summary>
+        public Dictionary<TetrominoRotation, int[,]> WKDLeftJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
         {
-            {
-                TetrominoRotation.Initial, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords( 1, 1),
-                    new RotationWKCoords( 0,-2),
-                    new RotationWKCoords( 1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Right, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords( 1, 0),
-                    new RotationWKCoords( 1,-1),
-                    new RotationWKCoords( 0, 2),
-                    new RotationWKCoords( 1, 2)
-                }
-            },
-            {
-                TetrominoRotation.Twice, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords(-1, 1),
-                    new RotationWKCoords( 0,-2),
-                    new RotationWKCoords(-1,-2)
-                }
-            },
-            {
-                TetrominoRotation.Left, new RotationWKCoords[5]
-                {
-                    new RotationWKCoords( 0, 0),
-                    new RotationWKCoords(-1, 0),
-                    new RotationWKCoords(-1,-1),
-                    new RotationWKCoords( 0, 2),
-                    new RotationWKCoords(-1, 2)
-                }
-            }
+            { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, { 1, 0}, { 1, 1}, { 0,-2}, { 1,-2} } },
+            { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 1, 0}, { 1,-1}, { 0, 2}, { 1, 2} } },
+            { TetrominoRotation.Twice, new int[5, 2] { { 0, 0}, {-1, 0}, {-1, 1}, { 0,-2}, {-1,-2} } },
+            { TetrominoRotation.Left, new int[5, 2] { { 0, 0}, {-1, 0}, {-1,-1}, { 0, 2}, {-1, 2} } }
         };
-    }
-
-    public delegate GameObject NewTileDelegate(Color color);
-
-    public class RotationWKCoords
-    {
-        public RotationWKCoords()
-        { }
-
-        public RotationWKCoords(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public int X { get; set; }
-        public int Y { get; set; }
     }
 }

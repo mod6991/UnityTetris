@@ -41,7 +41,7 @@ namespace Assets.Scripts.Tetrominoes
             float y = Y;
 
             TetrominoRotation previousR = Rotation;
-            RotationWKCoords[] wkd = WKDLeftI[previousR];
+            int[,] wkd = WKDLeftI[previousR];
 
             switch (Rotation)
             {
@@ -64,11 +64,11 @@ namespace Assets.Scripts.Tetrominoes
             //TODO: check and finish this
             for (int i = 0; i < 5; i++)
             {
-                X = x + wkd[i].X;
-                Y = y + wkd[i].Y;
+                X = x + wkd[i, 0];
+                Y = y - wkd[i, 1];
                 if (!CollisionX(gameBoard))
                 {
-                    Debug.Log($"success with {wkd[i].X}, {wkd[i].Y}");
+                    Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
                     success = true;
                     break;
                 }
