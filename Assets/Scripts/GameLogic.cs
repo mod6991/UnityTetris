@@ -49,13 +49,13 @@ public class GameLogic : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             _tetromino.MoveLeft();
-            if (_tetromino.CollisionX(_gameBoard))
+            if (_tetromino.Collision(_gameBoard))
                 _tetromino.MoveRight();
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             _tetromino.MoveRight();
-            if (_tetromino.CollisionX(_gameBoard))
+            if (_tetromino.Collision(_gameBoard))
                 _tetromino.MoveLeft();
         }
         if (Input.GetKeyDown(KeyCode.Q))
@@ -77,7 +77,7 @@ public class GameLogic : MonoBehaviour
             _tetromino.UpdateTilesPositions();
             _timer = 0;
 
-            if (_tetromino.CollisionY(_gameBoard))
+            if (_tetromino.Collision(_gameBoard))
             {
                 _tetromino.Y--;
                 //TODO: If collision while dropping -> store position (with Y--) in game board and Spawn new tetromino

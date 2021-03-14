@@ -97,8 +97,7 @@ namespace Assets.Scripts.Tetrominoes
         /// </summary>
         public abstract void UpdateTilesPositions();
 
-        public abstract bool CollisionX(TetrisGameBoard gameBoard);
-        public abstract bool CollisionY(TetrisGameBoard gameBoard);
+        public abstract bool Collision(TetrisGameBoard gameBoard);
 
         /// <summary>
         /// Wall kick data for I piece (clockwise)

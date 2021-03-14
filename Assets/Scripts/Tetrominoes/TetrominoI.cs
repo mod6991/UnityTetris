@@ -61,12 +61,11 @@ namespace Assets.Scripts.Tetrominoes
 
             bool success = false;
 
-            //TODO: check and finish this
             for (int i = 0; i < 5; i++)
             {
                 X = x + wkd[i, 0];
                 Y = y - wkd[i, 1];
-                if (!CollisionX(gameBoard))
+                if (!Collision(gameBoard))
                 {
                     Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
                     success = true;
@@ -218,78 +217,7 @@ namespace Assets.Scripts.Tetrominoes
             }
         }
         
-        public override bool CollisionX(TetrisGameBoard gameBoard)
-        {
-            if (WallCollisionX() || BoardCollisionX())
-                return true;
-            return false;
-        }
-
-        public override bool CollisionY(TetrisGameBoard gameBoard)
-        {
-            if (WallCollisionY() || BoardCollisionY())
-                return true;
-            return false;
-        }
-
-        private bool WallCollisionX()
-        {
-            if (Rotation == TetrominoRotation.Initial)
-            {
-                if (X < 0 || X > 6)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Right)
-            {
-                if (X < -2 || X > 7)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Twice)
-            {
-                if (X < 0 || X > 6)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Left)
-            {
-                if (X < -1 || X > 8)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private bool BoardCollisionX()
-        {
-            return false;
-        }
-
-        private bool WallCollisionY()
-        {
-            if (Rotation == TetrominoRotation.Initial)
-            {
-                if (Y > 17)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Right)
-            {
-                if (Y > 15)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Twice)
-            {
-                if (Y > 16)
-                    return true;
-            }
-            else if (Rotation == TetrominoRotation.Left)
-            {
-                if (Y > 15)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private bool BoardCollisionY()
+        public override bool Collision(TetrisGameBoard gameBoard)
         {
             return false;
         }
