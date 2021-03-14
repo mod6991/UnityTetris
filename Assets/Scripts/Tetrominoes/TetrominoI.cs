@@ -38,8 +38,7 @@ namespace Assets.Scripts.Tetrominoes
             int x = X;
             int y = Y;
 
-            TetrominoRotation previousR = Rotation;
-            int[,] wkd = WKDLeftI[previousR];
+            int[,] wkd = WKDLeftI[Rotation];
 
             switch (Rotation)
             {
@@ -74,8 +73,7 @@ namespace Assets.Scripts.Tetrominoes
             int x = X;
             int y = Y;
 
-            TetrominoRotation previousR = Rotation;
-            int[,] wkd = WKDRightI[previousR];
+            int[,] wkd = WKDRightI[Rotation];
 
             switch (Rotation)
             {
