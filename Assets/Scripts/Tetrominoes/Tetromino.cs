@@ -80,18 +80,93 @@ namespace Assets.Scripts.Tetrominoes
         /// Tetromino color
         /// </summary>
         public abstract Color Color { get; }
+        /// <summary>
+        /// Wall kick data (counter-clockwise)
+        /// </summary>
+        public abstract Dictionary<TetrominoRotation, int[,]> WKDLeft { get; }
+        /// <summary>
+        /// Wall kick data (clockwise)
+        /// </summary>
+        public abstract Dictionary<TetrominoRotation, int[,]> WKDRight { get; }
 
         /// <summary>
         /// Rotate tetromino counter-clockwise
         /// </summary>
         /// <param name="gameBoard"></param>
-        public abstract void RotateLeft(TetrisGameBoard gameBoard);
+        public void RotateLeft(TetrisGameBoard gameBoard)
+        {
+            int x = X;
+            int y = Y;
+
+            int[,] wkd = WKDLeft[Rotation];
+
+            switch (Rotation)
+            {
+                case TetrominoRotation.Initial:
+                    Rotation = TetrominoRotation.Left;
+                    break;
+                case TetrominoRotation.Right:
+                    Rotation = TetrominoRotation.Initial;
+                    break;
+                case TetrominoRotation.Twice:
+                    Rotation = TetrominoRotation.Right;
+                    break;
+                case TetrominoRotation.Left:
+                    Rotation = TetrominoRotation.Twice;
+                    break;
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                X = x + wkd[i, 0];
+                Y = y - wkd[i, 1];
+                if (!Collision(gameBoard))
+                {
+                    //Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
+                    break;
+                }
+            }
+        }
 
         /// <summary>
         /// Rotate tetromino clockwise
         /// </summary>
         /// <param name="gameBoard"></param>
-        public abstract void RotateRight(TetrisGameBoard gameBoard);
+        public void RotateRight(TetrisGameBoard gameBoard)
+        {
+            int x = X;
+            int y = Y;
+
+            int[,] wkd = WKDRight[Rotation];
+
+            switch (Rotation)
+            {
+                case TetrominoRotation.Initial:
+                    Rotation = TetrominoRotation.Right;
+                    break;
+                case TetrominoRotation.Right:
+                    Rotation = TetrominoRotation.Twice;
+                    break;
+                case TetrominoRotation.Twice:
+                    Rotation = TetrominoRotation.Left;
+                    break;
+                case TetrominoRotation.Left:
+                    Rotation = TetrominoRotation.Initial;
+                    break;
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                X = x + wkd[i, 0];
+                Y = y - wkd[i, 1];
+
+                if (!Collision(gameBoard))
+                {
+                    //Debug.Log($"success with {wkd[i, 0]}, {wkd[i, 1]}");
+                    break;
+                }
+            }
+        }
 
         public abstract void UpdateGrid(TetrominoRotation rotation);
 
@@ -120,12 +195,46 @@ namespace Assets.Scripts.Tetrominoes
             }
         }
 
-        public abstract bool Collision(TetrisGameBoard gameBoard);
+        public bool Collision(TetrisGameBoard gameBoard)
+        {
+            // Create an empty collision grid of size GridSize
+            List<List<int>> collisionGrid = new List<List<int>>();
+            for (int i = 0; i < GridSize; i++)
+            {
+                collisionGrid.Add(new List<int>());
+                for (int j = 0; j < GridSize; j++)
+                    collisionGrid[i].Add(0);
+            }
+
+            // Add collision data from wall or gameboard
+            for (int i = Y, a = 0; i < (Y + GridSize); i++, a++)
+            {
+                for (int j = X, b = 0; j < (X + GridSize); j++, b++)
+                {
+                    if (i < 0 || i > 19 || j < 0 || j > 9)
+                        collisionGrid[a][b] = 1;
+                    else if (gameBoard.Board[i, j] != null)
+                        collisionGrid[a][ b] = 1;
+                }
+            }
+
+            // Check for collision between Grid and collision grid
+            for (int i = 0; i < GridSize; i++)
+            {
+                for (int j = 0; j < GridSize; j++)
+                {
+                    if (Grid[i, j] == 1 && collisionGrid[i][j] == 1)
+                        return true;
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Wall kick data for I piece (clockwise)
         /// </summary>
-        public Dictionary<TetrominoRotation, int[,]> WKDRightI = new Dictionary<TetrominoRotation, int[,]>()
+        protected Dictionary<TetrominoRotation, int[,]> WKDRightI = new Dictionary<TetrominoRotation, int[,]>()
         {
             { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-2, 0}, { 1, 0}, {-2,-1}, { 1, 2} } },
             { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, {-1, 0}, { 2, 0}, {-1, 2}, { 2,-1} } },
@@ -136,7 +245,7 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Wall kick data for I piece (counter-clockwise)
         /// </summary>
-        public Dictionary<TetrominoRotation, int[,]> WKDLeftI = new Dictionary<TetrominoRotation, int[,]>()
+        protected Dictionary<TetrominoRotation, int[,]> WKDLeftI = new Dictionary<TetrominoRotation, int[,]>()
         {
             { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-1, 0}, { 2, 0}, {-1, 2}, { 2,-1} } },
             { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 2, 0}, {-1, 0}, { 2, 1}, {-1,-2} } },
@@ -147,7 +256,7 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Wall kick data for JLSTZ pieces (clockwise)
         /// </summary>
-        public Dictionary<TetrominoRotation, int[,]> WKDRightJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
+        protected Dictionary<TetrominoRotation, int[,]> WKDRightJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
         {
             { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, {-1, 0}, {-1, 1}, { 0,-2}, {-1,-2} } },
             { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 1, 0}, { 1,-1}, { 0, 2}, { 1, 2} } },
@@ -158,7 +267,7 @@ namespace Assets.Scripts.Tetrominoes
         /// <summary>
         /// Wall kick data for JLSTZ pieces (counter-clockwise)
         /// </summary>
-        public Dictionary<TetrominoRotation, int[,]> WKDLeftJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
+        protected Dictionary<TetrominoRotation, int[,]> WKDLeftJLSTZ = new Dictionary<TetrominoRotation, int[,]>()
         {
             { TetrominoRotation.Initial, new int[5, 2] { { 0, 0}, { 1, 0}, { 1, 1}, { 0,-2}, { 1,-2} } },
             { TetrominoRotation.Right, new int[5, 2] { { 0, 0}, { 1, 0}, { 1,-1}, { 0, 2}, { 1, 2} } },
