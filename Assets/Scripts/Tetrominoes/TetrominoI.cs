@@ -104,7 +104,7 @@ namespace Assets.Scripts.Tetrominoes
             switch (rotation)
             {
                 case TetrominoRotation.Initial:
-                    Grid = new int[4, 4]
+                    Grid = new int[,]
                     {
                         { 0, 0, 0, 0 },
                         { 1, 1, 1, 1 },
@@ -113,7 +113,7 @@ namespace Assets.Scripts.Tetrominoes
                     };
                     break;
                 case TetrominoRotation.Right:
-                    Grid = new int[4, 4]
+                    Grid = new int[,]
                     {
                         { 0, 0, 1, 0 },
                         { 0, 0, 1, 0 },
@@ -122,7 +122,7 @@ namespace Assets.Scripts.Tetrominoes
                     };
                     break;
                 case TetrominoRotation.Twice:
-                    Grid = new int[4, 4]
+                    Grid = new int[,]
                     {
                         { 0, 0, 0, 0 },
                         { 0, 0, 0, 0 },
@@ -131,7 +131,7 @@ namespace Assets.Scripts.Tetrominoes
                     };
                     break;
                 case TetrominoRotation.Left:
-                    Grid = new int[4, 4]
+                    Grid = new int[,]
                     {
                         { 0, 1, 0, 0 },
                         { 0, 1, 0, 0 },
@@ -144,30 +144,33 @@ namespace Assets.Scripts.Tetrominoes
 
         public override bool Collision(TetrisGameBoard gameBoard)
         {
-            int[,] collisionGrid = new int[4, 4]
+            // Create an empty collision grid of size GridSize
+            List<List<int>> collisionGrid = new List<List<int>>();
+            for (int i = 0; i < GridSize; i++)
             {
-                { 0, 0, 0, 0 },
-                { 0, 0, 0, 0 },
-                { 0, 0, 0, 0 },
-                { 0, 0, 0, 0 }
-            };
+                collisionGrid.Add(new List<int>());
+                for (int j = 0; j < GridSize; j++)
+                    collisionGrid[i].Add(0);
+            }
 
+            // Add collision data from wall or gameboard
             for (int i = Y, a = 0; i < (Y + GridSize); i++, a++)
             {
                 for (int j = X, b = 0; j < (X + GridSize); j++, b++)
                 {
                     if (i < 0 || i > 19 || j < 0 || j > 9)
-                        collisionGrid[a, b] = 1;
+                        collisionGrid[a][b] = 1;
                     else if (gameBoard.Board[i, j] != null)
-                        collisionGrid[a, b] = 1;
+                        collisionGrid[a][ b] = 1;
                 }
             }
 
+            // Check for collision between Grid and collision grid
             for (int i = 0; i < GridSize; i++)
             {
                 for (int j = 0; j < GridSize; j++)
                 {
-                    if (Grid[i, j] == 1 && collisionGrid[i, j] == 1)
+                    if (Grid[i, j] == 1 && collisionGrid[i][j] == 1)
                         return true;
                 }
             }
