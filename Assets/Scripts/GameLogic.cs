@@ -1,5 +1,7 @@
 using Assets.Scripts;
 using Assets.Scripts.Tetrominoes;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +23,8 @@ public class GameLogic : MonoBehaviour
     float _quickDropTime = .05f;
     float _timer = 0f;
 
+    System.Random _random;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +38,8 @@ public class GameLogic : MonoBehaviour
         _tileHeight = _panelHeight / 20;
 
         _gameBoard = new TetrisGameBoard(_panelWidth, _panelHeight, _tileWidth, _tileHeight);
+        _random = new System.Random();
+
         SpawnNewTetromino();
         //DrawGameBoard();
         GameObject t1 = NewTile(Color.yellow);
@@ -45,6 +51,7 @@ public class GameLogic : MonoBehaviour
     void Update()
     {
         _timer += Time.deltaTime;
+        bool merge = false;
 
         int x = _tetromino.X;
         int y = _tetromino.Y;
@@ -78,11 +85,8 @@ public class GameLogic : MonoBehaviour
             _tetromino.Y++;
             _timer = 0;
 
-            //if (_tetromino.Collision(_gameBoard))
-            //{
-            //    _tetromino.Y--;
-            //    //TODO: If collision while dropping -> store position (with Y--) in game board and Spawn new tetromino
-            //}
+            if (_tetromino.Collision(_gameBoard))
+                merge = true;
         }
 
         if (_tetromino.Collision(_gameBoard))
@@ -90,6 +94,12 @@ public class GameLogic : MonoBehaviour
             _tetromino.X = x;
             _tetromino.Y = y;
             _tetromino.Rotation = rotation;
+        }
+
+        if (merge)
+        {
+            _gameBoard.MergeTetromino(_tetromino);
+            SpawnNewTetromino();
         }
 
         _tetromino.UpdateTilesPositions();
@@ -108,6 +118,52 @@ public class GameLogic : MonoBehaviour
 
     void SpawnNewTetromino()
     {
+        List<Action> list = new List<Action>()
+        {
+            SpawnI,
+            SpawnJ,
+            SpawnL,
+            SpawnO,
+            SpawnS,
+            SpawnT,
+            SpawnZ
+        };
+
+        list[_random.Next() % 7]();
+    }
+
+    void SpawnI()
+    {
         _tetromino = new TetrominoI(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnJ()
+    {
+        _tetromino = new TetrominoJ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnL()
+    {
+        _tetromino = new TetrominoL(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnO()
+    {
+        _tetromino = new TetrominoO(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnS()
+    {
+        _tetromino = new TetrominoS(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnT()
+    {
+        _tetromino = new TetrominoT(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+    }
+
+    void SpawnZ()
+    {
+        _tetromino = new TetrominoZ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
     }
 }

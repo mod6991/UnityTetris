@@ -63,9 +63,23 @@ namespace Assets.Scripts
             }
         }
 
-        public Tetromino GetRandomTetromino()
+        public void MergeTetromino(Tetromino t)
         {
-            throw new NotImplementedException();
+            int tilesMoved = 0;
+
+            for (int i = t.Y, a = 0; a < t.GridSize; i++, a++)
+            {
+                for (int j = t.X, b = 0; b < t.GridSize; j++, b++)
+                {
+                    if (t.Grid[a, b] != 0)
+                        Board[i, j] = t.Tiles[tilesMoved++];
+
+                    if (tilesMoved == 4)
+                        break;
+                }
+            }
+
+            UpdateTilesPositions();
         }
     }
 }
