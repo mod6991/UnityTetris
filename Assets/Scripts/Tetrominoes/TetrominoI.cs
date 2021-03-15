@@ -9,18 +9,13 @@ namespace Assets.Scripts.Tetrominoes
     {
         private static Color _color = new Color(0, 1, 1, 1);
 
-        public TetrominoI(NewTileDelegate del, float panelWidth, float panelHeight,
-                                               float tileWidth, float tileHeight)
-            : base(panelWidth, panelHeight, tileWidth, tileHeight)
+        public TetrominoI(NewTileDelegate del,
+                          float panelWidth, float panelHeight,
+                          float tileWidth, float tileHeight)
+            : base(del, panelWidth, panelHeight, tileWidth, tileHeight)
         {
             X = 3;
             Y = -1;
-            Rotation = TetrominoRotation.Initial;
-            Tiles = new GameObject[4];
-            Tiles[0] = del(Color);
-            Tiles[1] = del(Color);
-            Tiles[2] = del(Color);
-            Tiles[3] = del(Color);
         }
 
         public override int GridSize

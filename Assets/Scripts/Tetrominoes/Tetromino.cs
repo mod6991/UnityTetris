@@ -10,13 +10,21 @@ namespace Assets.Scripts.Tetrominoes
     {
         private TetrominoRotation _rotation;
 
-        public Tetromino(float panelWidth, float panelHeight,
+        public Tetromino(NewTileDelegate del, 
+                         float panelWidth, float panelHeight,
                          float tileWidth, float tileHeight)
         {
             PanelWidth = panelWidth;
             PanelHeight = panelHeight;
             TileWidth = tileWidth;
             TileHeight = tileHeight;
+
+            Rotation = TetrominoRotation.Initial;
+            Tiles = new GameObject[4];
+            Tiles[0] = del(Color);
+            Tiles[1] = del(Color);
+            Tiles[2] = del(Color);
+            Tiles[3] = del(Color);
         }
 
         /// <summary>
