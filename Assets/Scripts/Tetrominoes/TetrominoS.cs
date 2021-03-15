@@ -13,7 +13,7 @@ namespace Assets.Scripts.Tetrominoes
             : base(del, panelWidth, panelHeight, tileWidth, tileHeight)
         {
             X = 3;
-            Y = -1;
+            Y = 0;
         }
 
         public override int GridSize

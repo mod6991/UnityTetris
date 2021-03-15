@@ -21,6 +21,8 @@ public class GameLogic : MonoBehaviour
 
     float _dropTime = 1f;
     float _quickDropTime = .05f;
+    float _moveTime = .1f;
+    float _moveTimer = 0f;
     float _timer = 0f;
 
     System.Random _random;
@@ -51,26 +53,31 @@ public class GameLogic : MonoBehaviour
     void Update()
     {
         _timer += Time.deltaTime;
+        _moveTimer += Time.deltaTime;
         bool merge = false;
 
         int x = _tetromino.X;
         int y = _tetromino.Y;
         TetrominoRotation rotation = _tetromino.Rotation;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (_moveTimer > _moveTime && Input.GetKey(KeyCode.LeftArrow))
         {
             _tetromino.X--;
-            //_tetromino.MoveLeft();
-            //if (_tetromino.Collision(_gameBoard))
-            //    _tetromino.MoveRight();
+            _moveTimer = 0;
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (_moveTimer > _moveTime && Input.GetKey(KeyCode.RightArrow))
         {
             _tetromino.X++;
-            //_tetromino.MoveRight();
-            //if (_tetromino.Collision(_gameBoard))
-            //    _tetromino.MoveLeft();
+            _moveTimer = 0;
         }
+        //if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //{
+        //    _tetromino.X--;
+        //}
+        //if (Input.GetKeyDown(KeyCode.RightArrow))
+        //{
+        //    _tetromino.X++;
+        //}
         if (Input.GetKeyDown(KeyCode.Q))
         {
             _tetromino.RotateLeft(_gameBoard);
@@ -110,7 +117,7 @@ public class GameLogic : MonoBehaviour
         GameObject tile = Instantiate(_refTile, transform);
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(_tileWidth, _tileHeight);
-        tile.transform.localScale = new Vector2(0.9f, 0.9f);
+        //tile.transform.localScale = new Vector2(0.9f, 0.9f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;
