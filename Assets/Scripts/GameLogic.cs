@@ -14,19 +14,40 @@ public class GameLogic : MonoBehaviour
     Text LevelText;
 
     [SerializeField]
+    Text LinesText;
+
+    [SerializeField]
     GameObject NextTetrominoPanel;
 
     RectTransform _panelRT;
+    RectTransform _smallPanelRT;
     GameObject _refTile;
 
     float _panelWidth;
     float _panelHeight;
+    float _smallPanelWidth;
+    float _smallPanelHeight;
 
     float _tileWidth;
     float _tileHeight;
+    float _smallTileWidth;
+    float _smallTileHeight;
+
+    List<TetrominoesEnum> _tetrominoes = new List<TetrominoesEnum>()
+    {
+        TetrominoesEnum.I,
+        TetrominoesEnum.J,
+        TetrominoesEnum.L,
+        TetrominoesEnum.O,
+        TetrominoesEnum.S,
+        TetrominoesEnum.T,
+        TetrominoesEnum.Z
+    };
 
     TetrisGameBoard _gameBoard;
     Tetromino _tetromino;
+    Tetromino _nextTetromino;
+    TetrominoesEnum _nextTetrominoEnum;
     bool _gameover = false;
 
     float _dropTime = 1f;
@@ -41,22 +62,28 @@ public class GameLogic : MonoBehaviour
     void Start()
     {
         _panelRT = (RectTransform)GetComponent("RectTransform");
+        _smallPanelRT = (RectTransform)NextTetrominoPanel.GetComponent("RectTransform");
         _refTile = (GameObject)Resources.Load("Tile");
 
         _panelWidth = _panelRT.sizeDelta.x;
         _panelHeight = _panelRT.sizeDelta.y;
+        _smallPanelWidth = _smallPanelRT.sizeDelta.x;
+        _smallPanelHeight = _smallPanelRT.sizeDelta.y;
 
         _tileWidth = _panelWidth / 10;
         _tileHeight = _panelHeight / 20;
+        _smallTileWidth = 20;
+        _smallTileHeight = 20;
 
         _gameBoard = new TetrisGameBoard(_panelWidth, _panelHeight, _tileWidth, _tileHeight);
         _random = new System.Random();
 
         _gameover = false;
 
+        _nextTetrominoEnum = GetRandomTetromino();
+        _nextTetromino = SmallTetrominoFromEnum(_nextTetrominoEnum);
+        _nextTetromino.UpdateTilesPositions();
         SpawnNewTetromino();
-        GameObject test = NewTile2(Color.red);
-        test.transform.localPosition = new Vector2(0, 0);
     }
 
     // Update is called once per frame
@@ -153,65 +180,77 @@ public class GameLogic : MonoBehaviour
         return tile;
     }
 
-    GameObject NewTile2(Color color)
+    GameObject NewSmallTile(Color color)
     {
         GameObject tile = Instantiate(_refTile, NextTetrominoPanel.transform);
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(20, 20);
-        tile.transform.localScale = new Vector2(1f, 1f);
+        tile.transform.localScale = new Vector2(0.9f, 0.9f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;
     }
 
+    TetrominoesEnum GetRandomTetromino()
+    {
+        return _tetrominoes[_random.Next() % _tetrominoes.Count];
+    }
+
+    Tetromino TetrominoFromEnum(TetrominoesEnum te)
+    {
+        switch (te)
+        {
+            case TetrominoesEnum.I:
+                return new TetrominoI(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.J:
+                return new TetrominoJ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.L:
+                return new TetrominoL(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.O:
+                return new TetrominoO(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.S:
+                return new TetrominoS(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.T:
+                return new TetrominoT(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            case TetrominoesEnum.Z:
+                return new TetrominoZ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+            default:
+                throw new Exception();
+        }
+    }
+
+    Tetromino SmallTetrominoFromEnum(TetrominoesEnum te)
+    {
+        switch (te)
+        {
+            case TetrominoesEnum.I:
+                return new TetrominoI(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0};
+            case TetrominoesEnum.J:
+                return new TetrominoJ(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            case TetrominoesEnum.L:
+                return new TetrominoL(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            case TetrominoesEnum.O:
+                return new TetrominoO(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            case TetrominoesEnum.S:
+                return new TetrominoS(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            case TetrominoesEnum.T:
+                return new TetrominoT(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            case TetrominoesEnum.Z:
+                return new TetrominoZ(NewSmallTile, _smallPanelWidth, _smallPanelHeight, _smallTileWidth, _smallTileHeight) { X = 0, Y = 0 };
+            default:
+                throw new Exception();
+        }
+    }
+
     void SpawnNewTetromino()
     {
-        List<Action> list = new List<Action>()
-        {
-            SpawnI,
-            SpawnJ,
-            SpawnL,
-            SpawnO,
-            SpawnS,
-            SpawnT,
-            SpawnZ
-        };
+        _tetromino = TetrominoFromEnum(_nextTetrominoEnum);
 
-        list[_random.Next() % 7]();
-    }
+        for (int i = 0; i < 4; i++)
+            UnityEngine.Object.Destroy(_nextTetromino.Tiles[i]);
 
-    void SpawnI()
-    {
-        _tetromino = new TetrominoI(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnJ()
-    {
-        _tetromino = new TetrominoJ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnL()
-    {
-        _tetromino = new TetrominoL(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnO()
-    {
-        _tetromino = new TetrominoO(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnS()
-    {
-        _tetromino = new TetrominoS(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnT()
-    {
-        _tetromino = new TetrominoT(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
-    }
-
-    void SpawnZ()
-    {
-        _tetromino = new TetrominoZ(NewTile, _panelWidth, _panelHeight, _tileWidth, _tileHeight);
+        _nextTetrominoEnum = GetRandomTetromino();
+        _nextTetromino = SmallTetrominoFromEnum(_nextTetrominoEnum);
+        _nextTetromino.UpdateTilesPositions();
     }
 }
