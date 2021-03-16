@@ -7,6 +7,15 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
+    [SerializeField]
+    Text ScoreText;
+
+    [SerializeField]
+    Text LevelText;
+
+    [SerializeField]
+    GameObject NextTetrominoPanel;
+
     RectTransform _panelRT;
     GameObject _refTile;
 
@@ -46,6 +55,8 @@ public class GameLogic : MonoBehaviour
         _gameover = false;
 
         SpawnNewTetromino();
+        GameObject test = NewTile2(Color.red);
+        test.transform.localPosition = new Vector2(0, 0);
     }
 
     // Update is called once per frame
@@ -137,6 +148,17 @@ public class GameLogic : MonoBehaviour
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(_tileWidth, _tileHeight);
         tile.transform.localScale = new Vector2(0.9f, 0.9f);
+        Image img = (Image)tile.GetComponent("Image");
+        img.color = color;
+        return tile;
+    }
+
+    GameObject NewTile2(Color color)
+    {
+        GameObject tile = Instantiate(_refTile, NextTetrominoPanel.transform);
+        RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
+        tileRT.sizeDelta = new Vector2(20, 20);
+        tile.transform.localScale = new Vector2(1f, 1f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;
