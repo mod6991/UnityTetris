@@ -50,7 +50,10 @@ public class GameLogic : MonoBehaviour
     TetrominoesEnum _nextTetrominoEnum;
     bool _gameover = false;
     int _lines = 0;
+    int _score = 0;
+    int _level = 0;
 
+    float _dropLevel = 60 / 60;
     float _dropTime = 1f;
     float _quickDropTime = .05f;
     float _moveTime = .1f;
@@ -135,7 +138,7 @@ public class GameLogic : MonoBehaviour
         }
 
         // Tetromino fall
-        if(_timer * 1 > _dropTime || (_timer * 1 > _quickDropTime && Input.GetKey(KeyCode.DownArrow)))
+        if(_timer > _dropTime / _dropLevel || (_timer > _quickDropTime && Input.GetKey(KeyCode.DownArrow)))
         {
             _tetromino.Y++;
             _timer = 0;
@@ -177,6 +180,97 @@ public class GameLogic : MonoBehaviour
     {
         _lines += lines;
         LinesText.text = _lines.ToString();
+
+        switch (lines)
+        {
+            case 1:
+                _score += 40 * (_level + 1);
+                break;
+            case 2:
+                _score += 100 * (_level + 1);
+                break;
+            case 3:
+                _score += 300 * (_level + 1);
+                break;
+            case 4:
+                _score += 1200 * (_level + 1);
+                break;
+        }
+
+        ScoreText.text = _score.ToString();
+
+        UpdateLevel();
+    }
+
+    void UpdateLevel()
+    {
+        if (_lines > 850)
+        {
+            _level = 13;
+            _dropLevel = 60 / 1;
+        }
+        else if (_lines > 750)
+        {
+            _level = 12;
+            _dropLevel = 60 / 1;
+        }
+        else if (_lines > 650)
+        {
+            _level = 11;
+            _dropLevel = 60 / 2;
+        }
+        else if (_lines > 550)
+        {
+            _level = 10;
+            _dropLevel = 60 / 3;
+        }
+        else if (_lines > 450)
+        {
+            _level = 9;
+            _dropLevel = 60 / 4;
+        }
+        else if (_lines > 360)
+        {
+            _level = 8;
+            _dropLevel = 60 / 6;
+        }
+        else if (_lines > 280)
+        {
+            _level = 7;
+            _dropLevel = 60 / 8;
+        }
+        else if (_lines > 210)
+        {
+            _level = 6;
+            _dropLevel = 60 / 11;
+        }
+        else if (_lines > 150)
+        {
+            _level = 5;
+            _dropLevel = 60 / 16;
+        }
+        else if (_lines > 100)
+        {
+            _level = 4;
+            _dropLevel = 60 / 21;
+        }
+        else if (_lines > 60)
+        {
+            _level = 3;
+            _dropLevel = 60 / 28;
+        }
+        else if (_lines > 30)
+        {
+            _level = 2;
+            _dropLevel = 60 / 37;
+        }
+        else if (_lines > 10)
+        {
+            _level = 1;
+            _dropLevel = 60 / 48;
+        }
+
+        LevelText.text = _level.ToString();
     }
 
     GameObject NewTile(Color color)
@@ -184,7 +278,7 @@ public class GameLogic : MonoBehaviour
         GameObject tile = Instantiate(_refTile, transform);
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(_tileWidth, _tileHeight);
-        tile.transform.localScale = new Vector2(0.9f, 0.9f);
+        tile.transform.localScale = new Vector2(0.96f, 0.96f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;
@@ -195,7 +289,7 @@ public class GameLogic : MonoBehaviour
         GameObject tile = Instantiate(_refTile, NextTetrominoPanel.transform);
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(20, 20);
-        tile.transform.localScale = new Vector2(0.9f, 0.9f);
+        tile.transform.localScale = new Vector2(0.96f, 0.96f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;
