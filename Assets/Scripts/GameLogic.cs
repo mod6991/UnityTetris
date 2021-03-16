@@ -18,6 +18,7 @@ public class GameLogic : MonoBehaviour
 
     TetrisGameBoard _gameBoard;
     Tetromino _tetromino;
+    bool _gameover = false;
 
     float _dropTime = 1f;
     float _quickDropTime = .05f;
@@ -42,51 +43,59 @@ public class GameLogic : MonoBehaviour
         _gameBoard = new TetrisGameBoard(_panelWidth, _panelHeight, _tileWidth, _tileHeight);
         _random = new System.Random();
 
+        _gameover = false;
+
         SpawnNewTetromino();
-        //DrawGameBoard();
-        GameObject t1 = NewTile(Color.yellow);
-        _gameBoard.Board[19, 0] = t1;
-        _gameBoard.UpdateTilesPositions();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Update timers
         _timer += Time.deltaTime;
         _moveTimer += Time.deltaTime;
-        bool merge = false;
 
+        // Backup tetromino location and rotation
         int x = _tetromino.X;
         int y = _tetromino.Y;
         TetrominoRotation rotation = _tetromino.Rotation;
 
+        bool merge = false;
+
+        // If Collision without action -> gameover
+        if (_tetromino.Collision(_gameBoard))
+            _gameover = true;
+
+        if (_gameover)
+            return;
+
+        // Left movement
         if (_moveTimer > _moveTime && Input.GetKey(KeyCode.LeftArrow))
         {
             _tetromino.X--;
             _moveTimer = 0;
         }
+
+        // Right movement
         if (_moveTimer > _moveTime && Input.GetKey(KeyCode.RightArrow))
         {
             _tetromino.X++;
             _moveTimer = 0;
         }
-        //if (Input.GetKeyDown(KeyCode.LeftArrow))
-        //{
-        //    _tetromino.X--;
-        //}
-        //if (Input.GetKeyDown(KeyCode.RightArrow))
-        //{
-        //    _tetromino.X++;
-        //}
+
+        // Counter-clockwise rotation
         if (Input.GetKeyDown(KeyCode.Q))
         {
             _tetromino.RotateLeft(_gameBoard);
         }
+
+        // Clockwise rotation
         if (Input.GetKeyDown(KeyCode.W))
         {
             _tetromino.RotateRight(_gameBoard);
         }
 
+        // Tetromino fall
         if(_timer * 1 > _dropTime || (_timer * 1 > _quickDropTime && Input.GetKey(KeyCode.DownArrow)))
         {
             _tetromino.Y++;
@@ -96,6 +105,7 @@ public class GameLogic : MonoBehaviour
                 merge = true;
         }
 
+        // If collision while moving or falling, revert the last movement
         if (_tetromino.Collision(_gameBoard))
         {
             _tetromino.X = x;
@@ -103,12 +113,21 @@ public class GameLogic : MonoBehaviour
             _tetromino.Rotation = rotation;
         }
 
+        // If tetromino collision because of the fall, merge it into the 
+        // gameboard and spawn a new one
         if (merge)
         {
             _gameBoard.MergeTetromino(_tetromino);
+            _gameBoard.UpdateTilesPositions();
+
+            List<int> fullLines = _gameBoard.CheckFullLines();
+            if (fullLines.Count > 0)
+                _gameBoard.RemoveLines(fullLines);
+
             SpawnNewTetromino();
         }
 
+        // Update tetromino tiles on screen
         _tetromino.UpdateTilesPositions();
     }
 
@@ -117,7 +136,7 @@ public class GameLogic : MonoBehaviour
         GameObject tile = Instantiate(_refTile, transform);
         RectTransform tileRT = (RectTransform)tile.GetComponent("RectTransform");
         tileRT.sizeDelta = new Vector2(_tileWidth, _tileHeight);
-        //tile.transform.localScale = new Vector2(0.9f, 0.9f);
+        tile.transform.localScale = new Vector2(0.9f, 0.9f);
         Image img = (Image)tile.GetComponent("Image");
         img.color = color;
         return tile;

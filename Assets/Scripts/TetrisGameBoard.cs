@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Tetrominoes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -78,8 +79,55 @@ namespace Assets.Scripts
                         break;
                 }
             }
+        }
 
-            UpdateTilesPositions();
+        public List<int> CheckFullLines()
+        {
+            List<int> list = new List<int>();
+
+            for (int i = 19; i >= 0; i--)
+            {
+                bool full = true;
+
+                for (int j = 0; j < 10; j++)
+                {
+                    if (Board[i, j] == null)
+                    {
+                        full = false;
+                        break;
+                    }
+                }
+
+                if (full)
+                    list.Add(i);
+            }
+
+            return list;
+        }
+
+        public void RemoveLines(List<int> lines)
+        {
+            int offset = 0;
+
+            for (int line_i = 0; line_i < lines.Count; line_i++)
+            {
+                // Remove objects on line
+                for (int j = 0; j < 10; j++)
+                {
+                    UnityEngine.Object.Destroy(Board[lines[line_i] + offset, j]);
+                    Board[lines[line_i] + offset, j] = null;
+                }
+
+                // Make all lines above fall
+                for (int i = lines[line_i] + offset - 1; i >= 0; i--)
+                {
+                    for (int j = 0; j < 10; j++)
+                        Board[i + 1, j] = Board[i, j];
+                }
+
+                offset++;
+                UpdateTilesPositions();
+            }
         }
     }
 }
