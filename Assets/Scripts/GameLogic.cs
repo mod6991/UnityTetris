@@ -49,6 +49,7 @@ public class GameLogic : MonoBehaviour
     Tetromino _nextTetromino;
     TetrominoesEnum _nextTetrominoEnum;
     bool _gameover = false;
+    int _lines = 0;
 
     float _dropTime = 1f;
     float _quickDropTime = .05f;
@@ -160,13 +161,22 @@ public class GameLogic : MonoBehaviour
 
             List<int> fullLines = _gameBoard.CheckFullLines();
             if (fullLines.Count > 0)
+            {
                 _gameBoard.RemoveLines(fullLines);
+                UpdateLines(fullLines.Count);
+            }
 
             SpawnNewTetromino();
         }
 
         // Update tetromino tiles on screen
         _tetromino.UpdateTilesPositions();
+    }
+
+    void UpdateLines(int lines)
+    {
+        _lines += lines;
+        LinesText.text = _lines.ToString();
     }
 
     GameObject NewTile(Color color)
